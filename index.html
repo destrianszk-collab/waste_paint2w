@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monitoring Limbah Cair B3</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#eef2f1;--sf:#fff;--tx:#14282b;--mu:#5d7074;--bd:#d3dcdb;--pr:#0f5257;--pt:#fff;--c1:#d99a00;--c2:#1f8a8a;--c3:#7a6fb0;--dg:#b3341f;--ok:#2e7d4f;--hz:#f5c400;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1819;--sf:#16282a;--tx:#e6efee;--mu:#93a9ab;--bd:#2a4043;--pr:#4cb7bd;--pt:#07191b;--c1:#f0b429;--c2:#3fb8b8;--c3:#a99ee0;--dg:#ff8a73;--ok:#6fcf97;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1819;--sf:#16282a;--tx:#e6efee;--mu:#93a9ab;--bd:#2a4043;--pr:#4cb7bd;--pt:#07191b;--c1:#f0b429;--c2:#3fb8b8;--c3:#a99ee0;--dg:#ff8a73;--ok:#6fcf97;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--tx);font:15px/1.5 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+.hz{height:6px;background:repeating-linear-gradient(-45deg,var(--hz) 0 12px,#1b1b1b 12px 24px)}
+header.top{background:var(--sf);border-bottom:1px solid var(--bd);display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:10px 20px}
+.brand{font-weight:700;font-size:17px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:400;font-size:12px;color:var(--mu)}
+nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+nav button{background:none;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;color:var(--mu);font-weight:500}
+nav button.on{background:var(--pr);color:var(--pt)}
+.who{font-size:13px;color:var(--mu);display:flex;align-items:center;gap:10px}
+.btn{background:var(--pr);color:var(--pt);border:0;border-radius:6px;padding:9px 16px;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.g{background:none;color:var(--tx);border:1px solid var(--bd);padding:6px 12px;font-weight:500}
+.btn.d{background:none;color:var(--dg);border:1px solid var(--bd);padding:4px 10px;font-size:13px}
+main{max-width:1180px;margin:0 auto;padding:20px}
+h1{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}h2{font-size:16px;margin:0 0 12px}
+.sub{color:var(--mu);margin:0 0 18px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));background:var(--sf);border:1px solid var(--bd);border-radius:8px;margin-bottom:16px}
+.kpi div{padding:14px 18px;border-left:1px solid var(--bd)}.kpi div:first-child{border-left:0}
+.kpi b{display:block;font-size:26px;letter-spacing:-.02em;line-height:1.2}.kpi span{color:var(--mu);font-size:13px}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media(max-width:820px){.grid,.grid2{grid-template-columns:1fr}.kpi div{border-left:0;border-top:1px solid var(--bd)}.kpi div:first-child{border-top:0}}
+.pn{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:16px;min-width:0}
+.ch{position:relative;height:260px}
+.sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--mu);font-weight:500;font-size:13px;padding:8px 10px;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.leg{display:flex;flex-direction:column;gap:6px;margin-top:10px;font-size:14px}.leg div{display:flex;justify-content:space-between}
+form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 16px}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu);font-weight:500}
+input,select,textarea{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:9px 10px;color:var(--tx);width:100%}
+.full{grid-column:1/-1}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.bar input,.bar select{width:auto;min-width:150px}
+.msg{margin-top:12px;padding:9px 12px;border-radius:6px;background:var(--bg);border:1px solid var(--ok);color:var(--ok);font-weight:500}
+.err{color:var(--dg);font-size:13px;min-height:18px}
+.lg{min-height:100vh;display:grid;place-items:center;padding:20px}
+.lb{width:100%;max-width:380px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.lb .in{padding:24px;display:grid;gap:14px}
+.hint{font-size:13px;color:var(--mu);background:var(--bg);border-radius:6px;padding:8px 10px}
+.empty{color:var(--mu);padding:18px 4px}
+.loader{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:99;color:#fff;font-weight:600;backdrop-filter:blur(2px)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// TEMPEL URL WEB APP GOOGLE APPS SCRIPT DI BAWAH INI:
+const API_URL = 'https://script.google.com/macros/s/GANTI_DENGAN_ID_DEPLOYMENT_ANDA/exec';
+
+const CATS={cat:{n:'Sisa cat produksi',c:'--c1'},cln:{n:'Limbah cleaning',c:'--c2'},lain:{n:'Lain-lain',c:'--c3'}};
+const ST=['Tersimpan di TPS','Diangkut','Selesai diolah'];
+const USERS={admin:{p:'admin123',role:'Admin',n:'Administrator EHS'},operator:{p:'operator123',role:'Operator',n:'Operator TPS'}};
+const SRC=['Line produksi 1','Line produksi 2','Area mixing','Workshop','Laboratorium'];
+const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const N=n=>Number(n).toLocaleString('id-ID');
+const D=t=>new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+const cv=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const $=id=>document.getElementById(id);
+
+let me=null,view='dash',recs=[],logs=[],fl={q:'',j:'',s:''},charts=[],flash='',loading=false;
+
+function setLoading(state, text='Menyinkronkan data...'){
+  loading = state;
+  let el = $('ld');
+  if(state && !el){
+    el = document.createElement('div');
+    el.id = 'ld';
+    el.className = 'loader';
+    el.textContent = text;
+    document.body.appendChild(el);
+  } else if(!state && el){
+    el.remove();
+  }
+}
+
+async function fetchDB(){
+  setLoading(true, 'Mengambil data dari server...');
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    recs = (data.recs || []).sort((a,b)=>b.tgl.localeCompare(a.tgl));
+    logs = (data.logs || []).slice(0, 200);
+  } catch(err) {
+    alert('Gagal terhubung ke database Google Sheets. Pastikan API_URL benar.');
+    console.error(err);
+  } finally {
+    setLoading(false);
+    render();
+  }
+}
+
+async function syncDB(payload){
+  setLoading(true, 'Menyimpan ke database...');
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Menghindari preflight CORS error di Apps Script
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    alert('Gagal menyimpan perubahan ke server.');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function makeLog(a, d){
+  const entry = {t:Date.now(), u:me?me.u:'-', a, d};
+  logs.unshift(entry);
+  logs = logs.slice(0, 200);
+  return entry;
+}
+
+async function init(){
+  try{me=JSON.parse(sessionStorage.getItem('me'))}catch(e){}
+  render();
+  if(me) await fetchDB();
+}
+
+function loginView(){return `<div class="lg"><div class="lb"><div class="hz"></div><form class="in" id="lf">
+<div class="brand">Monitoring Limbah Cair B3<small>Pencatatan dan pemantauan pembuangan</small></div>
+<label>Nama pengguna<input id="lu" autocomplete="username" required></label>
+<label>Kata sandi<input id="lp" type="password" autocomplete="current-password" required></label>
+<div class="err" id="le"></div><button class="btn">Masuk</button>
+<div class="hint">Akun contoh: <b>admin</b> / admin123 (bisa hapus data), <b>operator</b> / operator123</div></form></div></div>`}
+
+function shell(){const t=[['dash','Dashboard'],['input','Input limbah'],['data','Data limbah'],['log','Log aktivitas']];
+ return `<div class="hz"></div><header class="top"><div class="brand">Limbah Cair B3<small>Monitoring pembuangan</small></div>
+<nav>${t.map(x=>`<button data-v="${x[0]}" class="${view===x[0]?'on':''}">${x[1]}</button>`).join('')}</nav>
+<div class="who"><button class="btn g" id="syncBtn" title="Muat ulang data terbaru">&#x21bb; Refresh</button><span>${E(me.n)} (${me.role})</span><button class="btn g" id="out">Keluar</button></div></header><main id="mn"></main>`}
+
+function monthKey(d){return d.slice(0,7)}
+function dashView(){const now=new Date(),cm=now.toISOString().slice(0,7);
+ const cur=recs.filter(r=>monthKey(r.tgl)===cm),sum=a=>a.reduce((s,r)=>s+r.vol,0),wait=recs.filter(r=>r.st===0);
+ const tot={cat:0,cln:0,lain:0};recs.forEach(r=>{if(r.tgl>=new Date(now.getFullYear(),now.getMonth()-5,1).toISOString().slice(0,10))tot[r.jenis]+=r.vol});
+ return `<h1>Dashboard monitoring</h1><p class="sub">Ringkasan pembuangan limbah cair B3, tercatat per ${D(Date.now())}.</p>
+<div class="kpi"><div><b>${N(sum(cur))} L</b><span>Volume bulan ini</span></div><div><b>${N(cur.length)}</b><span>Transaksi bulan ini</span></div>
+<div><b>${N(wait.length)}</b><span>Menunggu pengangkutan</span></div><div><b>${N(sum(wait))} L</b><span>Volume di TPS saat ini</span></div></div>
+<div class="grid"><div class="pn"><h2>Volume per bulan (liter)</h2><div class="ch"><canvas id="c1"></canvas></div></div>
+<div class="pn"><h2>Komposisi 6 bulan terakhir</h2><div class="ch" style="height:200px"><canvas id="c2"></canvas></div>
+<div class="leg">${Object.keys(CATS).map(k=>`<div><span><i class="dot" style="background:var(${CATS[k].c})"></i>${CATS[k].n}</span><b>${N(tot[k])} L</b></div>`).join('')}</div></div></div>
+<div class="grid2"><div class="pn"><h2>Aktivitas terbaru</h2>${logTable(logs.slice(0,7))}</div>
+<div class="pn"><h2>Menunggu pengangkutan</h2>${wait.length?`<div class="sc"><table><tr><th>Tanggal</th><th>Jenis</th><th>Volume</th></tr>${wait.slice(0,7).map(r=>`<tr><td>${D(r.tgl)}</td><td>${CATS[r.jenis].n}</td><td>${N(r.vol)} L</td></tr>`).join('')}</table></div>`:'<div class="empty">Semua limbah sudah diangkut.</div>'}</div></div>`}
+
+function drawCharts(){charts.forEach(c=>c.destroy());charts=[];if(!window.Chart||!$('c1'))return;
+ const now=new Date(),ms=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);ms.push({k:d.toISOString().slice(0,7),l:d.toLocaleDateString('id-ID',{month:'short',year:'2-digit'})})}
+ const tx=cv('--mu'),gd=cv('--bd');Chart.defaults.color=tx;Chart.defaults.font.family='"Public Sans",system-ui,sans-serif';
+ const ks=Object.keys(CATS);
+ charts.push(new Chart($('c1'),{type:'bar',data:{labels:ms.map(m=>m.l),datasets:ks.map(k=>({label:CATS[k].n,backgroundColor:cv(CATS[k].c),data:ms.map(m=>recs.filter(r=>r.jenis===k&&monthKey(r.tgl)===m.k).reduce((s,r)=>s+r.vol,0))}))},
+  options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:gd}}},plugins:{legend:{position:'bottom'}}}}));
+ const from=ms[0].k;
+ charts.push(new Chart($('c2'),{type:'doughnut',data:{labels:ks.map(k=>CATS[k].n),datasets:[{borderColor:cv('--sf'),backgroundColor:ks.map(k=>cv(CATS[k].c)),data:ks.map(k=>recs.filter(r=>r.jenis===k&&monthKey(r.tgl)>=from).reduce((s,r)=>s+r.vol,0))}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false}}}}))}
+
+function logTable(l){return l.length?`<div class="sc"><table><tr><th>Waktu</th><th>Pengguna</th><th>Aksi</th><th>Detail</th></tr>${l.map(x=>`<tr><td style="white-space:nowrap">${D(x.t)} ${new Date(x.t).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</td><td>${E(x.u)}</td><td>${E(x.a)}</td><td>${E(x.d)}</td></tr>`).join('')}</table></div>`:'<div class="empty">Belum ada aktivitas.</div>'}
+
+function inputView(){const today=new Date().toISOString().slice(0,10);
+ return `<h1>Input pembuangan limbah</h1><p class="sub">Catat setiap pembuangan limbah cair B3 ke TPS.</p><div class="pn"><form class="f" id="rf">
+<label>Tanggal<input type="date" name="tgl" value="${today}" max="${today}" required></label>
+<label>Jenis limbah<select name="jenis" id="jn">${Object.keys(CATS).map(k=>`<option value="${k}">${CATS[k].n}</option>`).join('')}</select></label>
+<label id="kt" style="display:none">Keterangan limbah lain<input name="ket" placeholder="mis. oli bekas, pelarut lab"></label>
+<label>Volume (liter)<input type="number" name="vol" min="1" step="any" required></label>
+<label>Sumber / area<select name="src">${SRC.map(s=>`<option>${s}</option>`).join('')}</select></label>
+<label>Jenis wadah<select name="wadah"><option>Drum 200 L</option><option>IBC 1.000 L</option><option>Jerigen 20 L</option></select></label>
+<label>Status<select name="st">${ST.map((s,i)=>`<option value="${i}">${s}</option>`).join('')}</select></label>
+<label>No. manifest<input name="man" placeholder="diisi saat diangkut"></label>
+<label>Pengangkut<input name="peng" placeholder="nama perusahaan pengangkut"></label>
+<label class="full">Catatan<textarea name="cat" rows="2"></textarea></label>
+<div class="full"><div class="err" id="re"></div><button class="btn">Simpan data</button>${flash?`<div class="msg">${E(flash)}</div>`:''}</div></form></div>`}
+
+function dataView(){const q=fl.q.toLowerCase();
+ const l=recs.filter(r=>(!fl.j||r.jenis===fl.j)&&(fl.s===''||String(r.st)===fl.s)&&(!q||[r.id,r.src,r.man,r.peng,r.ket,r.wadah].join(' ').toLowerCase().includes(q)));
+ return `<h1>Data limbah</h1><p class="sub">${N(l.length)} dari ${N(recs.length)} catatan.</p><div class="pn"><div class="bar">
+<input id="fq" placeholder="Cari ID, sumber, manifest" value="${E(fl.q)}"><select id="fj"><option value="">Semua jenis</option>${Object.keys(CATS).map(k=>`<option value="${k}" ${fl.j===k?'selected':''}>${CATS[k].n}</option>`).join('')}</select>
+<select id="fs"><option value="">Semua status</option>${ST.map((s,i)=>`<option value="${i}" ${fl.s===String(i)?'selected':''}>${s}</option>`).join('')}</select></div>
+${l.length?`<div class="sc"><table><tr><th>ID</th><th>Tanggal</th><th>Jenis</th><th>Volume</th><th>Sumber</th><th>Wadah</th><th>Manifest</th><th>Status</th><th></th></tr>
+${l.slice(0,60).map(r=>`<tr><td>${r.id}</td><td style="white-space:nowrap">${D(r.tgl)}</td><td><i class="dot" style="background:var(${CATS[r.jenis].c})"></i>${E(r.ket||CATS[r.jenis].n)}</td><td style="white-space:nowrap">${N(r.vol)} L</td><td>${E(r.src)}</td><td>${E(r.wadah)}</td><td>${E(r.man||'-')}</td>
+<td><select data-st="${r.id}" style="width:auto">${ST.map((s,i)=>`<option value="${i}" ${r.st===i?'selected':''}>${s}</option>`).join('')}</select></td>
+<td>${me.role==='Admin'?`<button class="btn d" data-del="${r.id}">Hapus</button>`:''}</td></tr>`).join('')}</table></div>`:'<div class="empty">Tidak ada data yang cocok dengan filter.</div>'}</div>`}
+
+function render(){const a=$('app');
+ if(!me){
+  a.innerHTML=loginView();
+  $('lf').onsubmit=async e=>{
+    e.preventDefault();
+    const u=$('lu').value.trim().toLowerCase(),p=$('lp').value,x=USERS[u];
+    if(x&&x.p===p){
+      me={u,role:x.role,n:x.n};
+      try{sessionStorage.setItem('me',JSON.stringify(me))}catch(e){}
+      view='dash';
+      await fetchDB();
+      const logEntry = makeLog('Login','Masuk ke sistem');
+      await syncDB({ action: 'log_only', log: logEntry });
+      render();
+    }else $('le').textContent='Nama pengguna atau kata sandi salah.';
+  };
+  return;
+ }
+ a.innerHTML=shell();const m=$('mn');
+ m.innerHTML=view==='dash'?dashView():view==='input'?inputView():view==='data'?dataView():`<h1>Log aktivitas</h1><p class="sub">Riwayat login, input, perubahan status, dan penghapusan data.</p><div class="pn">${logTable(logs)}</div>`;
+ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{view=b.dataset.v;flash='';render()});
+ $('syncBtn').onclick=()=>fetchDB();
+ $('out').onclick=async ()=>{
+  const logEntry = makeLog('Logout','Keluar dari sistem');
+  await syncDB({ action: 'log_only', log: logEntry });
+  me=null;try{sessionStorage.removeItem('me')}catch(e){}render();
+ };
+ if(view==='dash')drawCharts();
+ if(view==='input'){
+  const jn=$('jn');jn.onchange=()=>{$('kt').style.display=jn.value==='lain'?'flex':'none'};
+  $('rf').onsubmit=async e=>{
+    e.preventDefault();
+    const f=new FormData(e.target),o=Object.fromEntries(f.entries());
+    if(o.jenis==='lain'&&!o.ket.trim()){$('re').textContent='Isi keterangan untuk jenis Lain-lain.';return}
+    if(+o.st>0&&!o.man.trim()){$('re').textContent='No. manifest wajib diisi untuk status Diangkut atau Selesai diolah.';return}
+    const id='LB3-'+(1000+recs.length+Math.floor(Math.random()*900)+50);
+    const newRec = {id,tgl:o.tgl,jenis:o.jenis,ket:o.ket.trim(),vol:+o.vol,src:o.src,wadah:o.wadah,man:o.man.trim(),peng:o.peng.trim(),st:+o.st,pet:me.u,cat:o.cat};
+    const logEntry = makeLog('Input data',`${id}: ${CATS[o.jenis].n}, ${N(o.vol)} L`);
+    recs.unshift(newRec);
+    recs.sort((a,b)=>b.tgl.localeCompare(a.tgl));
+    await syncDB({ action: 'add', data: newRec, log: logEntry });
+    flash=`Data ${id} tersimpan ke Google Sheets.`;
+    render();
+  }
+ }
+ if(view==='data'){
+  const keep=()=>{render();const q=$('fq');q.focus();q.setSelectionRange(q.value.length,q.value.length)};
+  $('fq').oninput=e=>{fl.q=e.target.value;keep()};$('fj').onchange=e=>{fl.j=e.target.value;render()};$('fs').onchange=e=>{fl.s=e.target.value;render()};
+  document.querySelectorAll('[data-st]').forEach(s=>s.onchange=async ()=>{
+    const r=recs.find(x=>x.id===s.dataset.st);
+    const old=ST[r.st];
+    r.st=+s.value;
+    const logEntry = makeLog('Ubah status',`${r.id}: ${old} menjadi ${ST[r.st]}`);
+    await syncDB({ action: 'update_status', id: r.id, st: r.st, log: logEntry });
+    render();
+  });
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async ()=>{
+    if(!confirm('Hapus catatan '+b.dataset.del+'?'))return;
+    const delId = b.dataset.del;
+    recs=recs.filter(x=>x.id!==delId);
+    const logEntry = makeLog('Hapus data', delId);
+    await syncDB({ action: 'delete', id: delId, log: logEntry });
+    render();
+  });
+ }
+}
+init();
+</script>
+</body>
+</html>
