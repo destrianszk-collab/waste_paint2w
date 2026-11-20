@@ -63,8 +63,7 @@ input,select,textarea{background:var(--bg);border:1px solid var(--bd);border-rad
 <body>
 <div id="app"></div>
 <script>
-// TEMPEL URL WEB APP GOOGLE APPS SCRIPT DI BAWAH INI:
-const API_URL = 'https://script.google.com/macros/s/GANTI_DENGAN_ID_DEPLOYMENT_ANDA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzSbDKBYDxIK9mCLhY1Paxzi2GgvadAM0WwtbBCkAydChI3ZmDSg70WbCJ26VWxZFWj/exec';
 
 const CATS={cat:{n:'Sisa cat produksi',c:'--c1'},cln:{n:'Limbah cleaning',c:'--c2'},lain:{n:'Lain-lain',c:'--c3'}};
 const ST=['Tersimpan di TPS','Diangkut','Selesai diolah'];
@@ -113,7 +112,7 @@ async function syncDB(payload){
   try {
     await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Menghindari preflight CORS error di Apps Script
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
   } catch(err) {
